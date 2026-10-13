@@ -214,7 +214,7 @@ El desarrollo sigue la metodología **Scrum** con seguimiento en **GitHub Projec
 
 ## 👨‍💻 Autores
 
-* **John Alejandro Morales Lopez** - [@AlejandroM55]
+* **John Alejandro Morales Lopez** - [@AlejandroM55](https://github.com/johnmoraleslo)
 * **Miguel Ángel Pulido Bustamante** - [@PulidoMiguelacademy](https://github.com/PulidoMiguelacademy)
 
 ---
