@@ -188,7 +188,7 @@ export default function Dashboard({ setActiveTab }) {
       )}
 
       {/* Acceso Rápido a Módulos */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
         <div className="card">
           <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "12px" }}>Catálogo de Productos</h3>
           <p style={{ fontSize: "13.5px", color: "#64748b", marginBottom: "18px" }}>
@@ -196,6 +196,16 @@ export default function Dashboard({ setActiveTab }) {
           </p>
           <button className="btn btn-secondary" onClick={() => setActiveTab("products")}>
             Ver Catálogo <ArrowRight size={16} />
+          </button>
+        </div>
+
+        <div className="card" style={{ borderTop: "4px solid #2563eb" }}>
+          <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "12px" }}>Historial de Movimientos (S7)</h3>
+          <p style={{ fontSize: "13.5px", color: "#64748b", marginBottom: "18px" }}>
+            Registra entradas con proveedor y seriales, ventas por escáner y audita el Kardex de movimientos.
+          </p>
+          <button className="btn btn-primary" onClick={() => setActiveTab("movements")}>
+            Ir a Movimientos <ArrowRight size={16} />
           </button>
         </div>
 

@@ -18,6 +18,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
   const menuItems = [
     { id: "dashboard", label: "Panel General", icon: LayoutDashboard },
     { id: "products", label: "Catálogo de Productos", icon: Package },
+    { id: "movements", label: "Historial de Movimientos", icon: ArrowLeftRight },
     { id: "suppliers", label: "Proveedores", icon: Truck },
     { id: "reports", label: "Reportes & Analítica (Python)", icon: BarChart3 },
   ];

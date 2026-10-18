@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
+import Movements from "./pages/Movements";
 import Suppliers from "./pages/Suppliers";
 import Reports from "./pages/Reports";
 import UsersManagement from "./pages/UsersManagement";
@@ -64,6 +65,7 @@ function MainApp() {
         <ErrorBoundary>
           {activeTab === "dashboard" && <Dashboard setActiveTab={setActiveTab} />}
           {activeTab === "products" && <Products />}
+          {activeTab === "movements" && <Movements />}
           {activeTab === "suppliers" && <Suppliers />}
           {activeTab === "reports" && <Reports />}
           {activeTab === "users" && <UsersManagement />}
