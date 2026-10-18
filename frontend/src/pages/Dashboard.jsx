@@ -200,7 +200,7 @@ export default function Dashboard({ setActiveTab }) {
         </div>
 
         <div className="card" style={{ borderTop: "4px solid #2563eb" }}>
-          <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "12px" }}>Historial de Movimientos (S7)</h3>
+          <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "12px" }}>Historial de Movimientos</h3>
           <p style={{ fontSize: "13.5px", color: "#64748b", marginBottom: "18px" }}>
             Registra entradas con proveedor y seriales, ventas por escáner y audita el Kardex de movimientos.
           </p>

@@ -8,7 +8,7 @@ export default function Navbar({ activeTab }) {
   const titles = {
     dashboard: "Panel General de Inventario",
     products: "Catálogo de Productos y Existencias",
-    movements: "Historial de Movimientos, Entradas y Ventas (Sprint 7)",
+    movements: "Historial de Movimientos y Operaciones de Inventario",
     suppliers: "Directorio de Proveedores",
     reports: "Reportes Financieros y Analítica (Python)",
     users: "Administración de Colaboradores y Roles"

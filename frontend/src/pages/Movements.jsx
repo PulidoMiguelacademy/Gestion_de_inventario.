@@ -528,7 +528,7 @@ export default function Movements() {
 
   return (
     <div className="page-body">
-      {/* Banner superior explicativo del módulo S7 */}
+      {/* Banner superior del módulo */}
       <div
         style={{
           backgroundColor: "white",
@@ -556,18 +556,18 @@ export default function Movements() {
                 textTransform: "uppercase"
               }}
             >
-              Sprint 7 • Control de Inventario y Ventas
+              Kardex • Control de Inventario y Ventas
             </span>
           </div>
           <h2 style={{ fontSize: "21px", fontWeight: "800", color: "#0f172a", margin: "0 0 4px 0" }}>
-            Centro de Historial de Movimientos, Entradas y Ventas
+            Historial de Movimientos, Entradas y Ventas
           </h2>
           <p style={{ fontSize: "13.5px", color: "#64748b", margin: 0 }}>
-            Gestiona entradas de proveedores con seriales (Tarea 07), consulta el Kardex de movimientos (Tarea 08) y registra ventas con escáner (Tarea 09).
+            Registra ingresos de mercancía con seriales y proveedor, consulta el historial de auditoría y procesa ventas con lector de código de barras.
           </p>
         </div>
 
-        {/* Botones de navegación de las 3 Historias de Usuario S7 */}
+        {/* Botones de navegación */}
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           <button
             className={`btn ${activeView === "historial" ? "btn-primary" : "btn-secondary"}`}
@@ -588,7 +588,7 @@ export default function Movements() {
             onClick={() => setActiveView("entrada")}
           >
             <ArrowDownLeft size={17} />
-            + Registrar Entrada (Tarea 07)
+            + Registrar Entrada
           </button>
 
           <button
@@ -602,13 +602,13 @@ export default function Movements() {
             onClick={() => setActiveView("venta")}
           >
             <Barcode size={17} />
-            Registrar Venta Escáner (Tarea 09)
+            Registrar Venta
           </button>
         </div>
       </div>
 
       {/* =====================================================================
-          VISTA 1 (TAREA 08): CONSULTAR HISTORIAL DE MOVIMIENTOS
+          VISTA 1: CONSULTAR HISTORIAL DE MOVIMIENTOS
          ===================================================================== */}
       {activeView === "historial" && (
         <>
@@ -701,7 +701,7 @@ export default function Movements() {
             </div>
           </div>
 
-          {/* Tabla de Historial de Movimientos (Tarea 08) */}
+          {/* Tabla de Historial de Movimientos */}
           <div className="card" style={{ padding: 0, overflow: "hidden" }}>
             <div
               style={{
@@ -714,7 +714,7 @@ export default function Movements() {
             >
               <div>
                 <h3 style={{ fontSize: "16px", fontWeight: "700", margin: "0 0 2px 0" }}>
-                  Tarea 08 — Historial Detallado de Movimientos (Kardex)
+                  Historial Detallado de Movimientos (Kardex)
                 </h3>
                 <p style={{ fontSize: "12.5px", color: "#64748b", margin: 0 }}>
                   Muestra cada movimiento realizado indicando producto, cantidad, tipo (entrada/salida), proveedor/cliente y seriales.
@@ -862,7 +862,7 @@ export default function Movements() {
       )}
 
       {/* =====================================================================
-          VISTA 2 (TAREA 07): REGISTRAR ENTRADA (Seriales, Proveedor, Fecha)
+          VISTA 2: REGISTRAR ENTRADA (Seriales, Proveedor, Fecha)
          ===================================================================== */}
       {activeView === "entrada" && (
         <div className="card" style={{ maxWidth: "820px", margin: "0 auto" }}>
@@ -892,7 +892,7 @@ export default function Movements() {
             </div>
             <div>
               <h3 style={{ fontSize: "18px", fontWeight: "800", color: "#0f172a", margin: 0 }}>
-                Tarea 07 — Registrar Entrada de Productos al Inventario
+                Registrar Entrada de Productos al Inventario
               </h3>
               <p style={{ fontSize: "13px", color: "#64748b", margin: 0 }}>
                 Selecciona el producto, asigna el proveedor, registra la fecha y los seriales recibidos. La cantidad se sumará automáticamente al stock actual.
@@ -1158,7 +1158,7 @@ export default function Movements() {
       )}
 
       {/* =====================================================================
-          VISTA 3 (TAREA 09): REGISTRAR VENTA (Escáner, Varios Productos y Seriales)
+          VISTA 3: REGISTRAR VENTA (Escáner, Varios Productos y Seriales)
          ===================================================================== */}
       {activeView === "venta" && (
         <div className="card" style={{ maxWidth: "960px", margin: "0 auto" }}>
@@ -1188,7 +1188,7 @@ export default function Movements() {
             </div>
             <div>
               <h3 style={{ fontSize: "18px", fontWeight: "800", color: "#0f172a", margin: 0 }}>
-                Tarea 09 — Registrar Venta (Escáner de Código de Barras y Seriales)
+                Registrar Venta — Escáner de Código de Barras y Seriales
               </h3>
               <p style={{ fontSize: "13px", color: "#64748b", margin: 0 }}>
                 Escanea códigos de barras o selecciona uno o varios productos, indica los seriales vendidos y descuenta automáticamente del inventario.
