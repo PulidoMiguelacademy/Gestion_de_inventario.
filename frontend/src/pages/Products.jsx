@@ -13,7 +13,9 @@ import {
   User,
   Calendar,
   DollarSign,
-  Edit2
+  Edit2,
+  Ban,
+  AlertTriangle
 } from "lucide-react";
 import { 
   collection, 
@@ -203,8 +205,12 @@ export default function Products() {
 
   // 2. ABRIR MODAL DE VENTA
   const openSaleModal = (product) => {
-    if (product.stockActual <= 0) {
-      alert("Este producto está AGOTADO. No se pueden realizar ventas hasta ingresar nuevo stock.");
+    if ((product.stockActual || 0) <= 0) {
+      alert(
+        `🚫 PRODUCTO NO DISPONIBLE:\n\n` +
+        `El artículo "${product.nombre}" está AGOTADO (0 unidades en inventario).\n` +
+        `No se pueden registrar ventas de este producto hasta que se realice una entrada de mercancía.`
+      );
       return;
     }
     setSelectedProduct(product);
@@ -532,31 +538,63 @@ export default function Products() {
                           <span style={{ fontSize: "12px", color: "#64748b" }}>{` (Mín: ${p.stockMinimo || 3})`}</span>
                         </td>
                         <td>
-                          <span className={`badge ${
-                            p.estadoStock === "AGOTADO" || p.stockActual === 0
-                              ? "badge-agotado"
-                              : p.estadoStock === "BAJO" || p.stockActual <= p.stockMinimo
-                              ? "badge-bajo"
-                              : "badge-ok"
-                          }`}>
-                            {p.stockActual === 0 ? "AGOTADO" : p.estadoStock || "OK"}
-                          </span>
+                          {p.stockActual === 0 || p.estadoStock === "AGOTADO" ? (
+                            <span
+                              className="badge badge-agotado"
+                              style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontWeight: "800" }}
+                            >
+                              <Ban size={13} /> NO DISPONIBLE
+                            </span>
+                          ) : p.stockActual <= (p.stockMinimo || 3) || p.estadoStock === "BAJO" ? (
+                            <span
+                              className="badge badge-bajo"
+                              style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontWeight: "700" }}
+                            >
+                              <AlertTriangle size={13} /> BAJO STOCK ({p.stockActual} disp.)
+                            </span>
+                          ) : (
+                            <span className="badge badge-ok">
+                              EN STOCK ({p.stockActual})
+                            </span>
+                          )}
                         </td>
                         <td>
-                          {/* BOTÓN CLAVE: REGISTRAR VENTA Y DESCONTAR STOCK */}
-                          <button
-                            className="btn btn-primary"
-                            style={{ 
-                              padding: "7px 14px", 
-                              fontSize: "13px",
-                              backgroundColor: p.stockActual === 0 ? "#94a3b8" : "#16a34a" 
-                            }}
-                            onClick={() => openSaleModal(p)}
-                            disabled={p.stockActual === 0}
-                          >
-                            <ShoppingCart size={15} />
-                            Vender
-                          </button>
+                          {/* BOTÓN CLAVE: REGISTRAR VENTA O MOSTRAR NO DISPONIBLE */}
+                          {p.stockActual === 0 || p.estadoStock === "AGOTADO" ? (
+                            <button
+                              className="btn"
+                              disabled
+                              style={{
+                                padding: "7px 12px",
+                                fontSize: "12px",
+                                fontWeight: "700",
+                                backgroundColor: "#fee2e2",
+                                color: "#991b1b",
+                                border: "1px solid #fca5a5",
+                                cursor: "not-allowed",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "6px"
+                              }}
+                              title="Este producto no tiene existencias disponibles. No se puede vender."
+                            >
+                              <Ban size={14} />
+                              Producto no disponible
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-primary"
+                              style={{
+                                padding: "7px 14px",
+                                fontSize: "13px",
+                                backgroundColor: "#16a34a"
+                              }}
+                              onClick={() => openSaleModal(p)}
+                            >
+                              <ShoppingCart size={15} />
+                              Vender
+                            </button>
+                          )}
                         </td>
                         {isAdmin ? (
                           <td style={{ textAlign: "right" }}>

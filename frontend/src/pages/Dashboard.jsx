@@ -178,9 +178,34 @@ export default function Dashboard({ setActiveTab }) {
                     {`Disponibles: `}<strong>{p.stockActual || 0}</strong>{` | Mínimo: ${p.stockMinimo || 3}`}
                   </p>
                 </div>
-                <span className={`badge ${p.stockActual === 0 ? "badge-agotado" : "badge-bajo"}`}>
-                  {p.stockActual === 0 ? "AGOTADO" : "BAJO STOCK"}
-                </span>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
+                  <span
+                    className={`badge ${p.stockActual === 0 ? "badge-agotado" : "badge-bajo"}`}
+                    style={{ fontWeight: "800", fontSize: "11px", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                  >
+                    {p.stockActual === 0 ? <Ban size={12} /> : <AlertTriangle size={12} />}
+                    {p.stockActual === 0 ? "NO DISPONIBLE" : "BAJO STOCK"}
+                  </span>
+                  <button
+                    onClick={() => setActiveTab("movements")}
+                    style={{
+                      background: p.stockActual === 0 ? "#dc2626" : "#2563eb",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "4px 8px",
+                      fontSize: "11px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "3px"
+                    }}
+                    title="Ir a registrar entrada de mercancía"
+                  >
+                    <ArrowDownLeft size={12} /> Reabastecer
+                  </button>
+                </div>
               </div>
             ))}
           </div>

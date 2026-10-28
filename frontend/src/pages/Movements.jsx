@@ -16,7 +16,9 @@ import {
   Trash2,
   Filter,
   FileText,
-  Sparkles
+  Sparkles,
+  Ban,
+  AlertTriangle
 } from "lucide-react";
 import {
   collection,
@@ -295,7 +297,11 @@ export default function Movements() {
   const addProductToSaleCart = (productObj) => {
     if (!productObj) return;
     if ((productObj.stockActual || 0) <= 0) {
-      alert(`El producto "${productObj.nombre}" está AGOTADO (Stock: 0).`);
+      alert(
+        `🚫 PRODUCTO NO DISPONIBLE:\n\n` +
+        `El artículo "${productObj.nombre}" está completamente AGOTADO (Stock: 0).\n` +
+        `No se pueden registrar ventas de este producto hasta reabastecer el inventario.`
+      );
       return;
     }
 
@@ -339,6 +345,15 @@ export default function Movements() {
     );
 
     if (matched) {
+      if ((matched.stockActual || 0) <= 0) {
+        alert(
+          `🚫 PRODUCTO NO DISPONIBLE:\n\n` +
+          `El producto "${matched.nombre}" (Código: ${matched.codigoBarras || "N/A"}) está AGOTADO.\n` +
+          `No se puede agregar al carrito de venta.`
+        );
+        setScannerInput("");
+        return;
+      }
       addProductToSaleCart(matched);
       setScannerInput("");
     } else {
@@ -1241,11 +1256,21 @@ export default function Movements() {
                   onChange={(e) => setSelectedProdToAdd(e.target.value)}
                 >
                   <option value="">-- Elegir un producto --</option>
-                  {products.map((p) => (
-                    <option key={p.id} value={p.id} disabled={(p.stockActual || 0) <= 0}>
-                      {p.nombre} — ${(p.precioVenta || 0).toLocaleString("es-CO")} (Stock: {p.stockActual || 0})
-                    </option>
-                  ))}
+                  {products.map((p) => {
+                    const isAgotado = (p.stockActual || 0) <= 0;
+                    return (
+                      <option
+                        key={p.id}
+                        value={p.id}
+                        disabled={isAgotado}
+                        style={{ color: isAgotado ? "#dc2626" : "#0f172a" }}
+                      >
+                        {isAgotado
+                          ? `🚫 ${p.nombre} — PRODUCTO NO DISPONIBLE (Agotado)`
+                          : `${p.nombre} — $${(p.precioVenta || 0).toLocaleString("es-CO")} (Stock: ${p.stockActual})`}
+                      </option>
+                    );
+                  })}
                 </select>
                 <button
                   type="button"
@@ -1253,6 +1278,10 @@ export default function Movements() {
                   onClick={() => {
                     const found = products.find((p) => p.id === selectedProdToAdd);
                     if (found) {
+                      if ((found.stockActual || 0) <= 0) {
+                        alert(`🚫 PRODUCTO NO DISPONIBLE:\n\nEl producto "${found.nombre}" no tiene existencias disponibles.`);
+                        return;
+                      }
                       addProductToSaleCart(found);
                       setSelectedProdToAdd("");
                     }

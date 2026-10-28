@@ -60,7 +60,7 @@ function MainApp() {
 
       {/* Contenido Principal */}
       <div className="main-content">
-        <Navbar activeTab={activeTab} />
+        <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <ErrorBoundary>
           {activeTab === "dashboard" && <Dashboard setActiveTab={setActiveTab} />}
