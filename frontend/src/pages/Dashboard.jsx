@@ -8,7 +8,9 @@ import {
   ShoppingBag, 
   CheckCircle2, 
   ArrowRight,
-  ShieldAlert
+  ShieldAlert,
+  Ban,
+  ArrowDownLeft
 } from "lucide-react";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
