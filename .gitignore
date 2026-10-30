@@ -31,10 +31,13 @@ sdist/
 .installed.cfg
 *.egg
 
-# Environment variables
+# Environment variables & Cloud Secrets
 .env
 .env.local
 .env.*.local
+*serviceAccountKey*.json
+.vercel/
+.railway/
 
 # Logs
 logs/

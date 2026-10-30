@@ -1,4 +1,5 @@
 import os
+import json
 from datetime import datetime
 from typing import Optional, List
 from fastapi import FastAPI, HTTPException, Query
@@ -29,7 +30,14 @@ try:
     from firebase_admin import credentials, firestore
 
     key_path = os.path.join(os.path.dirname(__file__), "serviceAccountKey.json")
-    if os.path.exists(key_path):
+    firebase_env_json = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON")
+    if firebase_env_json:
+        cred = credentials.Certificate(json.loads(firebase_env_json))
+        firebase_admin.initialize_app(cred)
+        db = firestore.client()
+        FIREBASE_INITIALIZED = True
+        print("[OK] Firebase Admin SDK conectado vía variable de entorno.")
+    elif os.path.exists(key_path):
         cred = credentials.Certificate(key_path)
         firebase_admin.initialize_app(cred)
         db = firestore.client()
@@ -66,6 +74,14 @@ class DailyCloseResponse(BaseModel):
 
 
 # --- ENDPOINTS ---
+
+@app.get("/")
+def root():
+    return {
+        "status": "online",
+        "service": "TecnoStock Python Backend",
+        "docs": "/docs"
+    }
 
 @app.get("/api/health")
 def health_check():
@@ -193,4 +209,5 @@ def generate_daily_close(req: DailyCloseRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=(os.environ.get("ENV") != "production"))
