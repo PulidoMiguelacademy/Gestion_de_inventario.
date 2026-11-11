@@ -160,7 +160,7 @@ export default function Products() {
 
     setSaving(true);
     try {
-      await addDoc(collection(db, "productos"), {
+      const newProdRef = await addDoc(collection(db, "productos"), {
         // Se guarda el texto tal cual con los puntos que colocó el usuario
         codigoBarras: form.codigoBarras.trim(),
         nombre: form.nombre.trim(),
@@ -181,6 +181,32 @@ export default function Products() {
         fechaCreacion: serverTimestamp(),
         creadoPor: profile?.uid || "admin"
       });
+
+      // Si el producto se registra con unidades iniciales (stock > 0), registrar automáticamente la ENTRADA en el Kardex
+      if (stock > 0) {
+        const provEncontrado = suppliers.find((s) => s.id === form.proveedorId) || suppliers[0];
+        const provNombre = provEncontrado?.nombre || "Proveedor Inicial";
+        const todayStr = new Date().toISOString().split("T")[0];
+
+        await addDoc(collection(db, "movimientos"), {
+          productoId: newProdRef.id,
+          productoNombre: form.nombre.trim(),
+          codigoBarras: form.codigoBarras.trim(),
+          tipo: "ENTRADA",
+          cantidad: stock,
+          costoUnitario: numCompra,
+          stockAnterior: 0,
+          stockNuevo: stock,
+          proveedorId: form.proveedorId || (provEncontrado?.id || "prov_tecnoandina"),
+          proveedorNombre: provNombre,
+          seriales: [],
+          fechaOperacion: todayStr,
+          observaciones: "Ingreso inicial por registro de nuevo producto",
+          usuarioId: profile?.uid || "admin",
+          vendedorNombre: profile?.nombre || profile?.correo || "Administrador",
+          fecha: serverTimestamp()
+        });
+      }
 
       setShowCreateModal(false);
       setForm({
