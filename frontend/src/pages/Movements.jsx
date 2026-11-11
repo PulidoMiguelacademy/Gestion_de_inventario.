@@ -18,7 +18,8 @@ import {
   FileText,
   Sparkles,
   Ban,
-  AlertTriangle
+  AlertTriangle,
+  SlidersHorizontal
 } from "lucide-react";
 import {
   collection,
@@ -516,7 +517,9 @@ export default function Movements() {
       m.vendedorNombre?.toLowerCase().includes(term) ||
       (Array.isArray(m.seriales) && m.seriales.some((s) => s.toLowerCase().includes(term)));
 
-    const matchesType = filterType === "TODOS" || m.tipo === filterType;
+    const matchesType =
+      filterType === "TODOS" ||
+      m.tipo?.toUpperCase() === filterType.toUpperCase();
 
     let matchesDate = true;
     if (filterDate) {
@@ -532,12 +535,16 @@ export default function Movements() {
   });
 
   const totalEntradas = movements
-    .filter((m) => m.tipo === "ENTRADA")
+    .filter((m) => m.tipo?.toUpperCase() === "ENTRADA")
     .reduce((acc, m) => acc + (m.cantidad || 0), 0);
 
   const totalSalidas = movements
-    .filter((m) => m.tipo === "SALIDA")
+    .filter((m) => m.tipo?.toUpperCase() === "SALIDA")
     .reduce((acc, m) => acc + (m.cantidad || 0), 0);
+
+  const countEntradas = movements.filter((m) => m.tipo?.toUpperCase() === "ENTRADA").length;
+  const countSalidas = movements.filter((m) => m.tipo?.toUpperCase() === "SALIDA").length;
+  const countAjustes = movements.filter((m) => m.tipo?.toUpperCase() === "AJUSTE").length;
 
   const selectedProductForEntry = products.find((p) => p.id === entryForm.productoId);
 
@@ -627,11 +634,22 @@ export default function Movements() {
          ===================================================================== */}
       {activeView === "historial" && (
         <>
-          {/* Tarjetas de resumen rápido */}
-          <div className="metric-grid" style={{ marginBottom: "24px" }}>
-            <div className="card metric-card">
+          {/* Tarjetas de resumen rápido e interactivo */}
+          <div className="metric-grid" style={{ marginBottom: "24px", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+            {/* 1. Todos */}
+            <div
+              className="card metric-card"
+              onClick={() => setFilterType("TODOS")}
+              style={{
+                cursor: "pointer",
+                border: filterType === "TODOS" ? "2px solid #2563eb" : "1px solid var(--border)",
+                backgroundColor: filterType === "TODOS" ? "#f8faff" : "white",
+                transition: "all 0.2s ease"
+              }}
+              title="Haz clic para ver todos los movimientos"
+            >
               <div>
-                <span className="metric-label">Total Movimientos Registrados</span>
+                <span className="metric-label">Total Movimientos</span>
                 <div className="metric-value">{movements.length}</div>
               </div>
               <div className="metric-icon-box" style={{ backgroundColor: "#eff6ff", color: "#2563eb" }}>
@@ -639,11 +657,25 @@ export default function Movements() {
               </div>
             </div>
 
-            <div className="card metric-card">
+            {/* 2. Entradas */}
+            <div
+              className="card metric-card"
+              onClick={() => setFilterType("ENTRADA")}
+              style={{
+                cursor: "pointer",
+                border: filterType === "ENTRADA" ? "2px solid #16a34a" : "1px solid var(--border)",
+                backgroundColor: filterType === "ENTRADA" ? "#f0fdf4" : "white",
+                transition: "all 0.2s ease"
+              }}
+              title="Haz clic para filtrar solo Entradas"
+            >
               <div>
                 <span className="metric-label">Unidades Ingresadas (Entradas)</span>
                 <div className="metric-value" style={{ color: "#16a34a" }}>
                   +{totalEntradas}
+                  <span style={{ fontSize: "13px", fontWeight: "600", color: "#64748b", marginLeft: "6px" }}>
+                    ({countEntradas} mov.)
+                  </span>
                 </div>
               </div>
               <div className="metric-icon-box" style={{ backgroundColor: "#f0fdf4", color: "#16a34a" }}>
@@ -651,21 +683,182 @@ export default function Movements() {
               </div>
             </div>
 
-            <div className="card metric-card">
+            {/* 3. Salidas */}
+            <div
+              className="card metric-card"
+              onClick={() => setFilterType("SALIDA")}
+              style={{
+                cursor: "pointer",
+                border: filterType === "SALIDA" ? "2px solid #ea580c" : "1px solid var(--border)",
+                backgroundColor: filterType === "SALIDA" ? "#fff7ed" : "white",
+                transition: "all 0.2s ease"
+              }}
+              title="Haz clic para filtrar solo Salidas / Ventas"
+            >
               <div>
                 <span className="metric-label">Unidades Despachadas (Salidas)</span>
                 <div className="metric-value" style={{ color: "#ea580c" }}>
                   -{totalSalidas}
+                  <span style={{ fontSize: "13px", fontWeight: "600", color: "#64748b", marginLeft: "6px" }}>
+                    ({countSalidas} mov.)
+                  </span>
                 </div>
               </div>
               <div className="metric-icon-box" style={{ backgroundColor: "#fff7ed", color: "#ea580c" }}>
                 <ArrowUpRight size={24} />
               </div>
             </div>
+
+            {/* 4. Ajustes */}
+            <div
+              className="card metric-card"
+              onClick={() => setFilterType("AJUSTE")}
+              style={{
+                cursor: "pointer",
+                border: filterType === "AJUSTE" ? "2px solid #d97706" : "1px solid var(--border)",
+                backgroundColor: filterType === "AJUSTE" ? "#fffbeb" : "white",
+                transition: "all 0.2s ease"
+              }}
+              title="Haz clic para filtrar solo Ajustes de Inventario"
+            >
+              <div>
+                <span className="metric-label">Ajustes de Inventario</span>
+                <div className="metric-value" style={{ color: "#d97706" }}>
+                  {countAjustes}
+                  <span style={{ fontSize: "13px", fontWeight: "600", color: "#64748b", marginLeft: "6px" }}>
+                    mov.
+                  </span>
+                </div>
+              </div>
+              <div className="metric-icon-box" style={{ backgroundColor: "#fef3c7", color: "#d97706" }}>
+                <SlidersHorizontal size={24} />
+              </div>
+            </div>
           </div>
 
-          {/* Barra de búsqueda y filtros del historial */}
-          <div className="card" style={{ marginBottom: "20px", padding: "18px 24px" }}>
+          {/* Barra de búsqueda y opciones de filtrado del historial */}
+          <div className="card" style={{ marginBottom: "20px", padding: "20px 24px" }}>
+            {/* Opciones visuales directas para filtrar: Todos, Entrada, Salida, Ajuste */}
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexWrap: "wrap",
+                alignItems: "center",
+                marginBottom: "16px",
+                paddingBottom: "14px",
+                borderBottom: "1px solid var(--border)"
+              }}
+            >
+              <span style={{ fontSize: "13px", fontWeight: "700", color: "#0f172a", display: "flex", alignItems: "center", gap: "6px" }}>
+                <Filter size={15} color="#2563eb" /> Filtrar por Tipo de Movimiento:
+              </span>
+
+              <button
+                type="button"
+                onClick={() => setFilterType("TODOS")}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "7px 14px",
+                  borderRadius: "999px",
+                  fontSize: "12.5px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                  border: filterType === "TODOS" ? "2px solid #2563eb" : "1px solid #cbd5e1",
+                  backgroundColor: filterType === "TODOS" ? "#eff6ff" : "white",
+                  color: filterType === "TODOS" ? "#1d4ed8" : "#475569",
+                  transition: "all 0.15s ease"
+                }}
+              >
+                <ArrowLeftRight size={14} /> Todos ({movements.length})
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFilterType("ENTRADA")}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "7px 14px",
+                  borderRadius: "999px",
+                  fontSize: "12.5px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                  border: filterType === "ENTRADA" ? "2px solid #16a34a" : "1px solid #cbd5e1",
+                  backgroundColor: filterType === "ENTRADA" ? "#dcfce7" : "white",
+                  color: filterType === "ENTRADA" ? "#15803d" : "#475569",
+                  transition: "all 0.15s ease"
+                }}
+              >
+                <ArrowDownLeft size={14} /> Entrada ({countEntradas})
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFilterType("SALIDA")}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "7px 14px",
+                  borderRadius: "999px",
+                  fontSize: "12.5px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                  border: filterType === "SALIDA" ? "2px solid #ea580c" : "1px solid #cbd5e1",
+                  backgroundColor: filterType === "SALIDA" ? "#ffedd5" : "white",
+                  color: filterType === "SALIDA" ? "#c2410c" : "#475569",
+                  transition: "all 0.15s ease"
+                }}
+              >
+                <ArrowUpRight size={14} /> Salida ({countSalidas})
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFilterType("AJUSTE")}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "7px 14px",
+                  borderRadius: "999px",
+                  fontSize: "12.5px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                  border: filterType === "AJUSTE" ? "2px solid #d97706" : "1px solid #cbd5e1",
+                  backgroundColor: filterType === "AJUSTE" ? "#fef3c7" : "white",
+                  color: filterType === "AJUSTE" ? "#b45309" : "#475569",
+                  transition: "all 0.15s ease"
+                }}
+              >
+                <SlidersHorizontal size={14} /> Ajustes ({countAjustes})
+              </button>
+
+              {filterType !== "TODOS" && (
+                <button
+                  type="button"
+                  onClick={() => setFilterType("TODOS")}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#dc2626",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                    marginLeft: "4px"
+                  }}
+                >
+                  Restablecer filtro
+                </button>
+              )}
+            </div>
+
+            {/* Fila de búsqueda por texto, dropdown y fecha */}
             <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
               <div style={{ position: "relative", flex: 1, minWidth: "260px" }}>
                 <Search size={18} style={{ position: "absolute", left: "14px", top: "13px", color: "#94a3b8" }} />
@@ -761,8 +954,9 @@ export default function Movements() {
                   ) : (
                     filteredMovements.map((mov) => {
                       const fechaObj = mov.fecha?.toDate ? mov.fecha.toDate() : new Date();
-                      const isEntrada = mov.tipo === "ENTRADA";
-                      const isSalida = mov.tipo === "SALIDA";
+                      const isEntrada = mov.tipo?.toUpperCase() === "ENTRADA";
+                      const isSalida = mov.tipo?.toUpperCase() === "SALIDA";
+                      const isAjuste = mov.tipo?.toUpperCase() === "AJUSTE";
                       const serialsList = Array.isArray(mov.seriales) ? mov.seriales : [];
 
                       return (
@@ -785,6 +979,7 @@ export default function Movements() {
                             >
                               {isEntrada && <ArrowDownLeft size={13} />}
                               {isSalida && <ArrowUpRight size={13} />}
+                              {isAjuste && <SlidersHorizontal size={13} />}
                               {mov.tipo || "MOVIMIENTO"}
                             </span>
                           </td>
